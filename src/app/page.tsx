@@ -1,20 +1,12 @@
-import {Container} from "@mui/material";
+import {Container, Divider} from "@mui/material";
+import {fetchData} from "@/app/fetchData";
+import Client from "@/app/Client";
 
-export async function fetchData(){
-  const res = await fetch('https://picsum.photos/200')
-  if (!res.ok) {
-    throw new Error('Failed to fetch data')
-  }
-  return res.json()
-}
 export default async function Home() {
-  const data = await fetchData();
-  console.log("data", data);
-  if (!data) return <div>loading...</div>;
-  return (
-    <div>
-      <h1>Home</h1>
-      <div>{data}</div>
-    </div>
-  )
+    const data = await fetchData();
+    if (!data) return <div>loading...</div>;
+
+    return (
+        <Client data={data}/>
+    )
 }
