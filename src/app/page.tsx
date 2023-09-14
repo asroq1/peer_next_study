@@ -2,6 +2,7 @@ import Image from 'next/image'
 import styles from './page.module.css'
 import ViewCard from '@/components/ViewCard'
 import Link from 'next/link'
+import axios from 'axios'
 
 interface Content {
   id: number;
@@ -10,7 +11,6 @@ interface Content {
 }
 
 export default async function Home() {
-  const axios = require("axios");
   const apiUrl = "http://localhost:4000/content";
   async function getContents(): Promise<Content[] | null> {
     try {
@@ -28,11 +28,13 @@ export default async function Home() {
     <main className={styles.main}>
       {contents && contents.map((content) => {
         return (
-          <ViewCard
-            key={content.id}
-            title={content.title}
-            content={content.content}
-          />
+          <Link key={content.id} href={`/view/${content.id}`}>
+              <ViewCard
+                key={content.id}
+                title={content.title}
+                content={content.content}
+              />
+          </Link>
         );
       })}
     </main>
