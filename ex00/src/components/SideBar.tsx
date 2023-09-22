@@ -14,7 +14,6 @@ import {
   ListItemText,
   Toolbar,
 } from '@mui/material'
-import { log } from 'console'
 import UploadModal from './UploadModal'
 const drawerWidth = 240
 

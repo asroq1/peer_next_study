@@ -7,6 +7,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload'
 import { styled } from '@mui/system'
 import axios from 'axios'
 import { TextField } from '@mui/material'
+import { log } from 'console'
 const VisuallyHiddenInput = styled('input')`
   clip: rect(0 0 0 0);
   clip-path: inset(50%);
@@ -39,6 +40,13 @@ interface UploadModalTypes {
   handleClose: () => void
 }
 
+interface Feed {
+  id: number
+  img_url: File | null
+  place: string
+  description: string
+}
+
 const UploadModal = ({
   title,
   content,
@@ -47,6 +55,13 @@ const UploadModal = ({
 }: UploadModalTypes) => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null)
   const [previewImage, setPreviewImage] = useState<string | null>(null)
+
+  const [data, setData] = useState<Feed>({
+    id: 0,
+    img_url: null,
+    place: '',
+    description: '',
+  })
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files
@@ -67,8 +82,12 @@ const UploadModal = ({
     if (!selectedImage) {
       alert('이미지를 선택해주세요.')
     }
-    axios.post('http://localhost:5000/feed', selectedImage).then((res) => {
+
+    setData({ ...data, img_url: selectedImage })
+    console.log('이미지', selectedImage)
+    axios.post('http://localhost:4000/feed', data).then((res) => {
       alert('업로드 완료')
+      handleClose()
     })
   }
 
@@ -88,8 +107,24 @@ const UploadModal = ({
             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
               {content}
             </Typography>
-            <TextField id="filled-basic" label="내용" variant="filled" />
-            <TextField id="filled-basic" label="장소" variant="filled" />
+            <TextField
+              id="filled-basic"
+              label="내용"
+              variant="filled"
+              value={data.description}
+              onChange={(e) => {
+                setData({ ...data, description: e.target.value })
+              }}
+            />
+            <TextField
+              id="filled-basic"
+              label="장소"
+              variant="filled"
+              value={data.place}
+              onChange={(e) => {
+                setData({ ...data, place: e.target.value })
+              }}
+            />
             <Button
               component="label"
               variant="contained"
